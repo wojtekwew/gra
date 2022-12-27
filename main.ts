@@ -4,9 +4,9 @@ input.onButtonPressed(Button.A, function () {
 input.onButtonPressed(Button.B, function () {
     gracz.move(1)
 })
-let xmeteor = 0
 let meteorb: game.LedSprite = null
 let gracz: game.LedSprite = null
+let wynik = 0
 let czas = 100
 gracz = game.createSprite(2, 3)
 let meteor = game.createSprite(randint(1, 3), 0)
@@ -16,6 +16,7 @@ basic.forever(function () {
         if (gracz.isTouching(meteorb)) {
             meteor.delete()
             meteorb.delete()
+            game.setScore(wynik)
             game.gameOver()
         }
     }
@@ -26,11 +27,13 @@ basic.forever(function () {
         if (jestmeteorb == true) {
             meteorb.delete()
         }
+        game.setScore(wynik)
         game.gameOver()
     }
 })
 basic.forever(function () {
     if (czas > -1 && czas < 6) {
+        gracz.set(LedSpriteProperty.Y, 4)
         jestmeteorb = true
         meteorb = game.createSprite(randint(1, 3), 0)
         for (let index = 0; index < 50; index++) {
@@ -40,13 +43,15 @@ basic.forever(function () {
             }
             if (meteorb.isTouchingEdge()) {
                 music.playSoundEffect(music.createSoundEffect(WaveShape.Sawtooth, 400, 600, 255, 0, 100, SoundExpressionEffect.Warble, InterpolationCurve.Linear), SoundExpressionPlayMode.InBackground)
-                game.addScore(1)
+                wynik += 1
                 basic.pause(200)
-                meteorb.delete()
-                meteorb = game.createSprite(randint(0, 4), 0)
-                xmeteor = randint(0, 4)
+                meteorb.set(LedSpriteProperty.Y, 0)
+                meteorb.set(LedSpriteProperty.X, randint(0, 4))
             }
         }
+        meteor.delete()
+        meteorb.delete()
+        game.setScore(wynik)
         game.gameOver()
     }
 })
@@ -58,10 +63,9 @@ basic.forever(function () {
     if (meteor.isTouchingEdge()) {
         music.playSoundEffect(music.createSoundEffect(WaveShape.Sawtooth, 400, 600, 255, 0, 100, SoundExpressionEffect.Warble, InterpolationCurve.Linear), SoundExpressionPlayMode.InBackground)
         czas += -5
-        game.addScore(1)
+        wynik += 1
         basic.pause(200)
-        meteor.delete()
-        meteor = game.createSprite(randint(0, 4), 0)
-        xmeteor = randint(0, 4)
+        meteor.set(LedSpriteProperty.X, randint(0, 4))
+        meteor.set(LedSpriteProperty.Y, 0)
     }
 })
